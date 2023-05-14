@@ -15,7 +15,10 @@ function AddAirline() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  const uniqueId = () => Math.round(Date.now() * Math.random()).toString()
+  const uniqueId = () => {
+    console.log(Math.round(Date.now() * Math.random()).toString())
+    return Math.round(Date.now() * Math.random()).toString()
+  }
   const [validated, setValidated] = useState(false);
   const [record, setRecord] = useState({})
 
@@ -35,14 +38,7 @@ function AddAirline() {
       event.stopPropagation();
     }
     setValidated(true);
-
-    setRecord((prev) => {
-      return {
-        ...prev, id: uniqueId()
-      }
-    });
-    
-    dispatch(addNewRecord(record));
+    dispatch(addNewRecord({...record, id:uniqueId()}));
 
     setTimeout(()=>{
       navigate("/all-users")

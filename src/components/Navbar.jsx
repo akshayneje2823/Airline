@@ -17,7 +17,7 @@ function Navigation() {
                     <Navbar.Brand>Airline</Navbar.Brand>
                 </LinkContainer>                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="me-auto">
+                    <Nav update-record="me-auto">
                         <LinkContainer to='/'>
                             <Nav.Link>Home</Nav.Link>
                         </LinkContainer>
@@ -29,7 +29,7 @@ function Navigation() {
                         </LinkContainer>
                        
                     </Nav>
-                    <Nav>
+                    <Nav className="d-flex">
                        <Button variant="outline-success" onClick={logoutFunction}>Logout</Button>
                     </Nav>
                 </Navbar.Collapse>

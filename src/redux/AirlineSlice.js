@@ -264,7 +264,8 @@ const initialState = {
             "website": "www.srilankaairways.com",
             "established": "1990"
         },
-    ]
+    ],
+    oldRecord: {}
 }
 
 
@@ -277,11 +278,12 @@ const AirlineSlice = createSlice({
             state.tableData.push(action.payload)
         },
         updatedRecord: (state, action) => {
-
+            let findIndex = state.tableData.findIndex(ele => ele.id === action.payload.id);
+            state.tableData[findIndex] = action.payload 
         },
         deleteRecord: (state, action) => {
             const updatedData = state.tableData.filter(newData => {
-                if (newData.id !== action.payload.id) return newData
+                return newData.id !== action.payload.id
             })
             state.tableData = updatedData
         },

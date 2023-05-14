@@ -8,23 +8,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteRecord, updatedRecord } from '../redux/AirlineSlice';
 
 
-function AirlineList() {
-    const tableData = useSelector(state => state.Airline.tableData).filter(newData => {
-        if (newData.id) {
-            return newData
-        }
-    });
-    console.log(tableData)
-    const filteredData = tableData.filter(newData => {
-        if (newData.id) {
-            return newData
-        }
-    })
-    
-    console.log(filteredData)
+function AirlineList({tableData, setSelectedAirLine}) {
+
+    console.log(tableData.sort((a,b)=>(a.name > b.name ? 1 : b.name > a.name ? -1 :0)))
+
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+
+
+    // const getAirlineData = async () => {
+    //     const res = await axios.get('https://api.instantwebtools.net/v1/airlines');
+    //     console.log(res.data)
+    // }
 
     const columns = [
         {
@@ -86,25 +83,22 @@ function AirlineList() {
     // update Record
     const updateAirlineHAndler = (currentRecord) => {
         console.log(currentRecord);
-        navigate('/update-record')
-        dispatch(updatedRecord(currentRecord))
+        setSelectedAirLine(currentRecord)
+        navigate(`/update-record/${currentRecord.id}`)
     }
 
 
     // Delete Record
     const deletedRecord = (currentRecord) => {
-        console.log(currentRecord)
         dispatch(deleteRecord(currentRecord))
     }
 
-
-
     return (
-        <Container className='mt-5'>
+        <Container className='mt-3'>
             <div className='text-end'><Link to='/add' className='btn btn-success'>Add Record</Link></div>
             <DataTable
                 columns={columns}
-                data={filteredData}
+                data={tableData}
                 fixedHeader
                 pagination
             />

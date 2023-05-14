@@ -7,23 +7,34 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import { useDispatch } from 'react-redux';
-import { addNewRecord } from '../redux/AirlineSlice';
+import { updatedRecord } from '../redux/AirlineSlice';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 
-function EditAirline() {
+function EditAirline({selectedAirLine,setSelectedAirLine}) {
+  let { id } = useParams();
+  console.log("selectedAirLine",selectedAirLine)
   const [validated, setValidated] = useState(false);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
 
+  const onChangeHandler = (event) => {
+    setSelectedAirLine({...selectedAirLine, [event.target.name]:event.target.value});
+  }
+  
   const handleSubmit = (event) => {
+    event.preventDefault()
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
-
+    
     setValidated(true);
+    dispatch(updatedRecord(selectedAirLine));
+    navigate('/all-users')
   };
 
   return (
@@ -38,7 +49,10 @@ function EditAirline() {
                 <Form.Control
                   required
                   type="text"
-                  placeholder=" Enter Name"
+                  placeholder="Enter Name"
+                  name='name'
+                  value={selectedAirLine.name}
+                  onChange={onChangeHandler}
                 />
                 <Form.Control.Feedback type='invalid'>Please enter name</Form.Control.Feedback>
               </Form.Group>
@@ -49,6 +63,9 @@ function EditAirline() {
                   required
                   type="text"
                   placeholder="Enter Country"
+                  name='country'
+                  value={selectedAirLine.country}
+                  onChange={onChangeHandler}
                 />
                 <Form.Control.Feedback type='invalid'>please enter valid country name</Form.Control.Feedback>
               </Form.Group>
@@ -60,6 +77,9 @@ function EditAirline() {
                     placeholder="Enter logo link"
                     aria-describedby="inputGroupPrepend"
                     required
+                    name='logo'
+                    value={selectedAirLine.logo}
+                    onChange={onChangeHandler}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter logo link.
@@ -75,6 +95,9 @@ function EditAirline() {
                     placeholder="slogan"
                     aria-describedby="inputGroupPrepend"
                     required
+                    name='slogan'
+                    value={selectedAirLine.slogan}
+                    onChange={onChangeHandler}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter slogan.
@@ -88,9 +111,11 @@ function EditAirline() {
                   <Form.Control
                     type="text"
                     placeholder="head quatres"
-                    name='head_quatres'
+                    name='head_quaters'
                     aria-describedby="inputGroupPrepend"
                     required
+                    value={selectedAirLine.head_quaters}
+                    onChange={onChangeHandler}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter head quatres.
@@ -106,6 +131,9 @@ function EditAirline() {
                     placeholder="website"
                     aria-describedby="inputGroupPrepend"
                     required
+                    name='website'
+                    value={selectedAirLine.website}
+                    onChange={onChangeHandler}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter website.
@@ -121,6 +149,9 @@ function EditAirline() {
                     placeholder="established"
                     aria-describedby="inputGroupPrepend"
                     required
+                    name='established'
+                    value={selectedAirLine.established}
+                    onChange={onChangeHandler}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter established year.
@@ -129,7 +160,13 @@ function EditAirline() {
               </Form.Group>
             </Row>
             <div className='d-flex align-items-center justify-content-center text-center'>
-              <Button type="submit" className='center' active onClick={() => dispatch(addNewRecord())}>Submit form</Button>
+              <Button type="submit" className='btn btn-success text-center m-2'  active onClick={(e) => handleSubmit(e)}>Update</Button>
+              <Button type="submit" className='btn btn-primary text-center center' active onClick={() => {
+
+                navigate('/all-users');
+                // reset the state
+                
+              }}>Cancel</Button>
             </div>
           </Form>
         </Card.Body>
