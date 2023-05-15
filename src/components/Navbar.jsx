@@ -1,37 +1,38 @@
 import React from 'react'
-import { Navbar, Nav, Container,  Button } from 'react-bootstrap';
+import { Navbar, Nav, Container, Form } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
-import { googleLogout } from '@react-oauth/google';
+import Logout from './Auth/Logout';
+import { useSelector } from 'react-redux';
 
 // googleLogout();
 
 function Navigation() {
-    const logoutFunction = () => {
-        alert("sdfds")
-        console.log(googleLogout())
-    }
+
+    const isLogin = useSelector(state => state.Airline.isLogin);
+    const userName = useSelector(state => state.Airline.userName)
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
                 <LinkContainer to='/'>
                     <Navbar.Brand>Airline</Navbar.Brand>
-                </LinkContainer>                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                </LinkContainer>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav update-record="me-auto">
+                    <Nav className="me-auto">
                         <LinkContainer to='/'>
-                            <Nav.Link>Home</Nav.Link>
+                            <Nav.Link>Airline Data</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to='/add'>
-                            <Nav.Link>Add Airline</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to='/all-users'>
-                            <Nav.Link>Users</Nav.Link>
-                        </LinkContainer>
-                       
+
                     </Nav>
-                    <Nav className="d-flex">
-                       <Button variant="outline-success" onClick={logoutFunction}>Logout</Button>
+                    <Nav>
+
                     </Nav>
+                    <Form className="d-flex">
+                        <h4 style={{'color':"white","margin":"2"}}>{userName}</h4>
+                        {isLogin ? <Logout /> : null}
+
+                    </Form>
+
                 </Navbar.Collapse>
             </Container>
         </Navbar>

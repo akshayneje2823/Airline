@@ -1,77 +1,76 @@
 import React from 'react'
-import { GoogleLoginButton } from 'react-social-login-buttons';
-import { LoginSocialGoogle } from 'reactjs-social-login'
-// import { GoogleLogin, GoogleLogout } from 'react-google-login'
-import {GoogleLogin} from '@react-oauth/google';
-
+import { GoogleLogin } from 'react-google-login';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { userLogin, userName } from '../../redux/AirlineSlice';
+import './login.css'
 
 function Login() {
 
   const clientId = "340050983213-gtp9vgb4nai054uknt7ne9e1s8822gf2.apps.googleusercontent.com";
 
-  //on successful login
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+
   const onLoginSuccess = (res) => {
-    console.log('Login Success:', res.profileObj);
+    console.log("login successful");
+    console.log(res);
+    localStorage.setItem("user", JSON.stringify(res.accessToken));
+    dispatch(userLogin(true));
+    dispatch(userName(res.profileObj.name))
+    navigate('/');
   }
 
-  // login failure
-  const onLoginFailure = (res) => {
-    console.log('Login Failed:', res);
-  }
-
-  const onSignOutSuccess = () => {
-    alert("You have been logged out successfully");
-    console.clear();
-  }
+  const handleLoginFailure = (res) => {
+    console.log(res)
+  };
 
   return (
-    <div>
-      {/* <GoogleLogin
-        clientId={clientId}
-        buttonText="Sign In"
-        onSuccess={onLoginSuccess}
-        onFailure={onLoginFailure}
-        cookiePolicy={'single_host_origin'}
-        isSignedIn={true}
-      />
-      <GoogleLogout
-        clientId={clientId}
-        buttonText="Sign Out"
-        onLogoutSuccess={onSignOutSuccess}
-      >
-      </GoogleLogout>  */}
+    <>
+      <div className="Auth-form-container">
+        <form className="Auth-form">
+          <div className="Auth-form-content">
+            <h3 className="Auth-form-title">Sign In</h3>
+            <div className='ml-5 text-center'>
+            <GoogleLogin
+              clientId={clientId}
+              buttonText='Login'
+              onSuccess={onLoginSuccess}
+              onFailure={handleLoginFailure}
+              cookiePolicy={'single_host_origin'}
+              responseType='code,token'
+            />
+            </div>
+            <div className="form-group mt-3">
 
-      {/* <LoginSocialGoogle
-        client_id={clientId}
-        scope="openid profile email"
-        discoveryDocs="claims_supported"
-        access_type="offline"
-        onResolve={({ provider, data }) => {
-          console.log(provider, data);
-        }}
-        onReject={(err) => {
-          console.log(err);
-        }}
-      >
-        <GoogleLoginButton />
-      </LoginSocialGoogle> */}
+              <label>Email address</label>
+              <input
+                type="email"
+                className="form-control mt-1"
+                placeholder="Enter email"
+              />
+            </div>
+            <div className="form-group mt-3">
+              <label>Password</label>
+              <input
+                type="password"
+                className="form-control mt-1"
+                placeholder="Enter password"
+              />
+            </div>
+            <div className="d-grid gap-2 mt-3">
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </div>
+            <p className="forgot-password text-right mt-2">
+              Forgot <a href="/">password?</a>
+            </p>
+          </div>
+        </form>
+      </div>
 
-
-
-
-
-      <GoogleLogin
-        onSuccess={credentialResponse => {
-          console.log(credentialResponse);
-        }}
-        onError={() => {
-          console.log('Login Failed');
-        }}
-      />;
-
-
-
-    </div>
+    </>
   )
 }
 

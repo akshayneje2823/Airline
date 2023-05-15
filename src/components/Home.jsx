@@ -4,24 +4,21 @@ import { Container } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteRecord, updatedRecord } from '../redux/AirlineSlice';
+import { useDispatch } from 'react-redux';
+import { deleteRecord } from '../redux/AirlineSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+function Home({ tableData, setSelectedAirLine }) {
 
-function AirlineList({tableData, setSelectedAirLine}) {
-
-    console.log(tableData.sort((a,b)=>(a.name > b.name ? 1 : b.name > a.name ? -1 :0)))
+    // console.log(tableData.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)))
 
 
     const dispatch = useDispatch()
     const navigate = useNavigate();
 
+    const notify = () => toast("Record Deleted Successfully");
 
-
-    // const getAirlineData = async () => {
-    //     const res = await axios.get('https://api.instantwebtools.net/v1/airlines');
-    //     console.log(res.data)
-    // }
 
     const columns = [
         {
@@ -80,22 +77,31 @@ function AirlineList({tableData, setSelectedAirLine}) {
         }
     ];
 
+
     // update Record
     const updateAirlineHAndler = (currentRecord) => {
         console.log(currentRecord);
         setSelectedAirLine(currentRecord)
-        navigate(`/update-record/${currentRecord.id}`)
+        navigate(`/update-record`)
     }
 
 
     // Delete Record
     const deletedRecord = (currentRecord) => {
-        dispatch(deleteRecord(currentRecord))
+        notify()
+        dispatch(deleteRecord(currentRecord));
+
+        // toast Message
+
     }
 
     return (
         <Container className='mt-3'>
             <div className='text-end'><Link to='/add' className='btn btn-success'>Add Record</Link></div>
+            <ToastContainer
+                position="top-center"
+                autoClose={1500}
+            />
             <DataTable
                 columns={columns}
                 data={tableData}
@@ -106,4 +112,4 @@ function AirlineList({tableData, setSelectedAirLine}) {
     )
 }
 
-export default AirlineList
+export default Home

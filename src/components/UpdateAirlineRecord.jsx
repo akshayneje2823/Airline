@@ -8,39 +8,58 @@ import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import { useDispatch } from 'react-redux';
 import { updatedRecord } from '../redux/AirlineSlice';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
+function UpdateAirlineRecord({ selectedAirLine, setSelectedAirLine }) {
+  // console.log("selectedAirLine",selectedAirLine)
 
-function EditAirline({selectedAirLine,setSelectedAirLine}) {
-  let { id } = useParams();
-  console.log("selectedAirLine",selectedAirLine)
   const [validated, setValidated] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
+  // toast message
+  const notify = () => toast("Record Deleted Successfully");
+
+
+  // on changing input field
   const onChangeHandler = (event) => {
-    setSelectedAirLine({...selectedAirLine, [event.target.name]:event.target.value});
+    setSelectedAirLine({ ...selectedAirLine, [event.target.name]: event.target.value });
   }
-  
+
+
+  // submit button
   const handleSubmit = (event) => {
     event.preventDefault()
+
+    // validation
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
-    
     setValidated(true);
+
     dispatch(updatedRecord(selectedAirLine));
-    navigate('/all-users')
+
+    setTimeout(() => {
+      navigate('/');
+    }, 2000)
+    notify()
+
   };
 
   return (
     <Container className='mt-5'>
       <Card className="mb-5">
-        <Card.Header className='text-center h2'>Fill the details to add Airline.</Card.Header>
+        <Card.Header className='text-center h2'>Update the details</Card.Header>
+        <ToastContainer
+          position="top-center"
+          autoClose={1500}
+        />
         <Card.Body >
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Row className="mb-3">
@@ -160,12 +179,12 @@ function EditAirline({selectedAirLine,setSelectedAirLine}) {
               </Form.Group>
             </Row>
             <div className='d-flex align-items-center justify-content-center text-center'>
-              <Button type="submit" className='btn btn-success text-center m-2'  active onClick={(e) => handleSubmit(e)}>Update</Button>
+              <Button type="submit" className='btn btn-success text-center m-2' active onClick={(e) => handleSubmit(e)}>Update</Button>
               <Button type="submit" className='btn btn-primary text-center center' active onClick={() => {
 
-                navigate('/all-users');
+                navigate('/');
                 // reset the state
-                
+
               }}>Cancel</Button>
             </div>
           </Form>
@@ -178,4 +197,4 @@ function EditAirline({selectedAirLine,setSelectedAirLine}) {
 }
 
 
-export default EditAirline
+export default UpdateAirlineRecord

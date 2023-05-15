@@ -9,19 +9,28 @@ import Card from 'react-bootstrap/Card'
 import { useDispatch } from 'react-redux';
 import { addNewRecord } from '../redux/AirlineSlice';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function AddAirline() {
+function AddRecord() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
+  
+  const [validated, setValidated] = useState(false);
+  const [record, setRecord] = useState({});
+
+  // toast message
+  const notify = () => toast("Record Added Successfully");
+
+  // creating unique id
   const uniqueId = () => {
     console.log(Math.round(Date.now() * Math.random()).toString())
     return Math.round(Date.now() * Math.random()).toString()
   }
-  const [validated, setValidated] = useState(false);
-  const [record, setRecord] = useState({})
 
+  // on change Handler
   const changeHandler = (event) => {
     setRecord((prev) => {
       return {
@@ -40,8 +49,10 @@ function AddAirline() {
     setValidated(true);
     dispatch(addNewRecord({...record, id:uniqueId()}));
 
+    notify()
+
     setTimeout(()=>{
-      navigate("/all-users")
+      navigate("/")
     },2000)
 
   };
@@ -55,7 +66,11 @@ function AddAirline() {
   return (
     <Container className='mt-5'>
       <Card className="mb-5">
-        <Card.Header className='text-center h2'>Fill the details to add Airline</Card.Header>
+      <ToastContainer 
+      position="top-center"
+      autoClose={1500}
+       />
+        <Card.Header className='text-center h2'>Fill The Details To Add Airline Record </Card.Header>
         <Card.Body >
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Row className="mb-3">
@@ -174,7 +189,9 @@ function AddAirline() {
               </Form.Group>
             </Row>
             <div className='d-flex align-items-center justify-content-center text-center'>
-              <Button type="submit" className='center' active >Submit form</Button>
+              <Button type="submit" className='center m-2 btn-success' active >Add</Button>
+              <Button type="submit" className='center m-2' onClick={()=>navigate('/')} >back</Button>
+
             </div>
           </Form>
         </Card.Body>
@@ -186,4 +203,4 @@ function AddAirline() {
 }
 
 
-export default AddAirline
+export default AddRecord
